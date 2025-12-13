@@ -1,4 +1,17 @@
 #include<stdio.h>
+//员工结构体
+struct Employee
+{
+	char name[15];//姓名
+	char gender[8];//性别
+	char tele[12];//电话
+	int age;//年龄
+	double money//工资
+};
+//员工结构体数组
+struct Employee employeeLost[100];
+//记录当前员工的数量
+int employeeCount = 0;
 void menu();
 
 int main()
