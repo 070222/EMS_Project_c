@@ -1,4 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
+#include<stdlib.h>
 //员工结构体
 struct Employee
 {
@@ -6,13 +8,16 @@ struct Employee
 	char gender[8];//性别
 	char tele[12];//电话
 	int age;//年龄
-	double money//工资
+	double money;//工资
 };
 //员工结构体数组
-struct Employee employeeLost[100];
+struct Employee employeeList[100];
 //记录当前员工的数量
 int employeeCount = 0;
+//菜单
 void menu();
+//添加员工
+void addEmployee();
 
 int main()
 {
@@ -20,11 +25,11 @@ int main()
 	{
 		int choice;
 		menu();
-		scanf_s("%d", &choice);
+		scanf("%d", &choice);
 		switch (choice)
 		{
 		case 1:
-			printf("添加成功\n");
+			addEmployee();
 			break;
 		case 2:
 			printf("删除成功\n");
@@ -65,5 +70,28 @@ void menu()
 	printf("6.保存\n");
 	printf("0.退出\n");
 	printf("---------------------------------------------\n");
-
+}
+//添加员工
+void addEmployee()
+{
+	char selectYNFlag = 'y';
+	while (selectYNFlag == 'y' || selectYNFlag == 'Y')
+	{
+		printf("\n请输入员工的姓名：");
+		scanf("%s", employeeList[employeeCount].name);
+		printf("\n请输入员工的性别：");
+		scanf("%s", employeeList[employeeCount].gender);
+		printf("\n请输入员工的电话：");
+		scanf("%s", employeeList[employeeCount].tele);
+		printf("\n请输入员工的年龄：");
+		scanf("%d", &employeeList[employeeCount].age);
+		printf("\n请输入员工的工资：");
+		scanf("%lf",&employeeList[employeeCount].money);
+		employeeCount++;
+		printf("\n是否继续添加：");
+		 int ch = getchar();
+		 (void)ch;//防止getchar()警告
+		scanf("%c", &selectYNFlag);
+	}
+	printf("员工数量：%d\n", employeeCount);
 }
