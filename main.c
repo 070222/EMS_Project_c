@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 //员工结构体
 struct Employee
 {
@@ -18,6 +19,9 @@ int employeeCount = 0;
 void menu();
 //添加员工
 void addEmployee();
+//判断员工姓名是否重复
+int getOneEmployeeName(char* name);
+
 
 int main()
 {
@@ -79,6 +83,12 @@ void addEmployee()
 	{
 		printf("\n请输入员工的姓名：");
 		scanf("%s", employeeList[employeeCount].name);
+		int index = getOneEmployeeName(employeeList[employeeCount].name);
+		if (index != -1)
+		{
+			printf("该员工已存在！工号%d重复\n",index);
+			break;
+		}
 		printf("\n请输入员工的性别：");
 		scanf("%s", employeeList[employeeCount].gender);
 		printf("\n请输入员工的电话：");
@@ -95,3 +105,18 @@ void addEmployee()
 	}
 	printf("员工数量：%d\n", employeeCount);
 }
+//传入一个姓名，然后循环判断，重复就返回员工的下表，不重复就返回-1
+int getOneEmployeeName(char* name)
+{
+	int res = -1;
+	for (int i = 0; i < employeeCount; i++)
+	{
+		if (strcmp(name, employeeList[i].name) == 0)
+		{
+			//表示重复
+			res = i;
+			break;
+		}
+	}		
+	return res;
+	}
