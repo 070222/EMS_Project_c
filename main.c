@@ -8,8 +8,8 @@ struct Employee
 	char name[15];//姓名
 	char gender[8];//性别
 	char tele[12];//电话
-	int age;//年龄
-	double money;//工资
+    double money;//工资
+	int age;//年龄	
 };
 //员工结构体数组
 struct Employee employeeList[100];
@@ -21,6 +21,9 @@ void menu();
 void addEmployee();
 //判断员工姓名是否重复
 int getOneEmployeeName(char* name);
+//员工查询
+void findEmployee();
+
 
 
 int main()
@@ -42,7 +45,7 @@ int main()
 			printf("修改成功\n");
 			break;
 		case 4:
-			printf("查询成功\n");
+			findEmployee();
 			break;
 		case 5:
 		    printf("排序成功\n");
@@ -62,9 +65,9 @@ int main()
 	
 	return 0;
 }
+//菜单
 void menu()
 {
-	//菜单
 	printf("-----------------员工管理系统菜单----------------\n");
 	printf("1.添加员工\n");
 	printf("2.删除员工\n");
@@ -120,3 +123,64 @@ int getOneEmployeeName(char* name)
 	}		
 	return res;
 	}
+//员工查询
+void findEmployee()
+{
+	//选择查询条件
+	int select = 0;
+	char conCharArr[40];//姓名和性别
+	double conNum1, conNum2;//工资范围
+	printf("0:全部\n");
+	printf("1:按 姓名 查询\n");
+	printf("2:按 性别 查询\n");
+	printf("3:按 工资 查询\n");
+	printf("请输入选择：\n");
+	scanf("%d", &select);
+	//录入筛选条件
+	if (select == 1 || select == 2)
+	{
+		printf("请输入筛选条件：");
+		scanf("%s", conCharArr);
+	}
+	else if (select == 3)
+	{
+		printf("请输入筛选范围m,n，用空格隔开（m <= 工资 <= n）");
+		scanf("%lf", &conNum1);
+		scanf("%lf", &conNum2);
+	}
+	//打印表头
+	printf("\n%-5s%-15s%-10s%-16s%-12s%-10s\n\n", "序号", "姓名", "性别", "电话", "工资", "年龄");
+	//输出符合条件的员工信息
+	int count = 0;//符合条件的人数
+	double sumMoney = 0.0;//符合条件的员工工资总和
+	int sumAge = 0;//符合条件的员工年龄总和
+	for (int i = 0; i < employeeCount; i++)
+	{
+		//select conCharArr
+		if (
+			select == 0
+			||
+			select == 1 && strstr(employeeList[i].name, conCharArr)
+			||
+			select == 2 && strstr(employeeList[i].gender, conCharArr)
+			||
+			select == 3 && employeeList[i].money >= conNum1 && employeeList[i].money <= conNum2
+			)
+		{
+			printf("%-5d%-15s%-10s%-16s%-12lf%-10d\n\n"
+				, i
+				, employeeList[i].name
+				, employeeList[i].gender
+				, employeeList[i].tele
+				, employeeList[i].money
+				, employeeList[i].age
+			);
+			count++;
+			sumMoney += employeeList[i].money;
+			sumAge += employeeList[i].age;
+		}
+	}
+	printf("\n符合条件的员工数量：%d\n", count);
+	printf("\n符合条件的员工的平均工资：%.2lf\n", count == 0 ? 0.0 : (sumMoney / count));
+	printf("\n符合条件的员工的平均年龄：%.2lf\n", count == 0 ? 0.0 : (sumAge * 1.0 / count));
+}
