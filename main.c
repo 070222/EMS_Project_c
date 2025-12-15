@@ -23,11 +23,17 @@ void addEmployee();
 int getOneEmployeeName(char* name);
 //员工查询
 void findEmployee();
+//保存-覆盖写入员工信息
+void writeEmployee();
+//保存-读取已保存的员工信息
+void readEmployee();
 
 
 
+//主函数
 int main()
 {
+	readEmployee();
 	while (1)
 	{
 		int choice;
@@ -51,6 +57,7 @@ int main()
 		    printf("排序成功\n");
 			break;
 		case 6:
+			writeEmployee();
 			printf("保存成功\n");
 			break;
 		case 0:
@@ -149,7 +156,7 @@ void findEmployee()
 		scanf("%lf", &conNum2);
 	}
 	//打印表头
-	printf("\n%-5s%-15s%-10s%-16s%-12s%-10s\n\n", "序号", "姓名", "性别", "电话", "工资", "年龄");
+	printf("\n%-5s%-15s%-10s%-16s%-16s%-10s\n\n", "序号", "姓名", "性别", "电话", "工资", "年龄");
 	//输出符合条件的员工信息
 	int count = 0;//符合条件的人数
 	double sumMoney = 0.0;//符合条件的员工工资总和
@@ -167,7 +174,7 @@ void findEmployee()
 			select == 3 && employeeList[i].money >= conNum1 && employeeList[i].money <= conNum2
 			)
 		{
-			printf("%-5d%-15s%-10s%-16s%-12lf%-10d\n\n"
+			printf("%-5d%-15s%-10s%-16s%-16lf%-10d\n\n"
 				, i
 				, employeeList[i].name
 				, employeeList[i].gender
@@ -183,4 +190,35 @@ void findEmployee()
 	printf("\n符合条件的员工数量：%d\n", count);
 	printf("\n符合条件的员工的平均工资：%.2lf\n", count == 0 ? 0.0 : (sumMoney / count));
 	printf("\n符合条件的员工的平均年龄：%.2lf\n", count == 0 ? 0.0 : (sumAge * 1.0 / count));
+}
+//保存-覆盖写入员工信息
+void writeEmployee()
+{
+	FILE* fp = NULL;
+	fp = fopen("D:\\c\\EMS_Project_c\\EMS.txt", "w+");//覆盖写入
+	for (int i = 0; i < employeeCount; i++)
+	{
+		fprintf(fp, "%s %s %s %lf %d\n",
+			employeeList[i].name, employeeList[i].gender, employeeList[i].tele, employeeList[i].money, employeeList[i].age);
+	} 
+	fclose(fp);
+} 
+//保存-读取已保存的员工信息
+void readEmployee()
+{
+	FILE* fp = NULL;
+	if (NULL == (fp = fopen("D:\\c\\EMS_Project_c\\EMS.txt", "r")))
+	{
+				printf("文件打开失败，可能是文件不存在！\n");
+				return;
+	}
+	int i = 0;
+	while (
+		fscanf(fp, "%s%s%s%lf%d\n",
+			employeeList[i].name, employeeList[i].gender, employeeList[i].tele,&employeeList[i].money, &employeeList[i].age) != EOF)
+	{
+		i++;
+	}
+	employeeCount = i;
+	fclose(fp);
 }
