@@ -29,6 +29,8 @@ void modEmployee();
 int getOneEmployeeName(char* name);
 //员工查询
 void findEmployee(int all);
+//排序员工
+void sortEmployee();
 //保存-覆盖写入员工信息
 void writeEmployee();
 //保存-读取已保存的员工信息
@@ -66,7 +68,9 @@ int main()
 			findEmployee(0);
 			break;
 		case 5:
-		    printf("排序成功\n");
+			//排序员工
+			findEmployee(1);
+			sortEmployee();
 			break;
 		case 6:
 			//保存员工
@@ -74,10 +78,10 @@ int main()
 			printf("保存成功\n");
 			break;
 		case 0:
-			printf("\n\n感谢您的使用\n\n");
+			printf("\n\n感谢您的使用！\n\n");
 			exit(0);
 		default:
-			printf("输入有误，请重新输入\n");
+			printf("输入有误！请重新输入：\n");
 			system("pause");
 			break;
 		}
@@ -272,6 +276,43 @@ void findEmployee(int all)
 	printf("\n符合条件的员工数量：%d\n", count);
 	printf("\n符合条件的员工的平均工资：%.2lf\n", count == 0 ? 0.0 : (sumMoney / count));
 	printf("\n符合条件的员工的平均年龄：%.2lf\n", count == 0 ? 0.0 : (sumAge * 1.0 / count));
+}
+//排序员工
+void sortEmployee()
+{
+	int select;
+	printf("请选择排序方式：\n");
+	printf("1:按 姓名 排序\n");
+	printf("2:按 性别 排序\n");
+	printf("3:按 电话 排序\n");
+	printf("4:按 工资 排序\n");
+	printf("5:按 年龄 排序\n");
+	printf("请输入选择：");
+	scanf("%d", &select);
+	//冒泡排序
+	for(int i = employeeCount - 1; i > 0; i--)
+	{
+		for (int j = 0; j < i; j++)
+		{
+			if (
+				1 == select && strcmp(employeeList[j].name, employeeList[j + 1].name) > 0//正向排序
+				||
+				2 == select && strcmp(employeeList[j].gender, employeeList[j + 1].gender) > 0//正向排序
+				||
+				3 == select && strcmp(employeeList[j].tele, employeeList[j + 1].tele) > 0//正向排序
+				||
+				4 == select && employeeList[j].money > employeeList[j + 1].money//正向排序
+				||
+				5 == select && employeeList[j].age > employeeList[j + 1].age//正向排序
+				)
+			{
+				struct Employee temp = employeeList[j];
+				employeeList[j] = employeeList[j + 1];
+				employeeList[j + 1] = temp;
+			}
+		}
+	}
+	findEmployee(1);//排序后显示所有员工
 }
 //保存-覆盖写入员工信息
 void writeEmployee()
