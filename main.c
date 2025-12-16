@@ -22,11 +22,13 @@ void addEmployee();
 //判断员工姓名是否重复
 int getOneEmployeeName(char* name);
 //员工查询
-void findEmployee();
+void findEmployee(int all);
 //保存-覆盖写入员工信息
 void writeEmployee();
 //保存-读取已保存的员工信息
 void readEmployee();
+//修改员工信息
+void modEmployee();
 
 
 
@@ -42,21 +44,26 @@ int main()
 		switch (choice)
 		{
 		case 1:
+			//添加员工
 			addEmployee();
 			break;
 		case 2:
 			printf("删除成功\n");
 			break;
 		case 3:
-			printf("修改成功\n");
+			//修改员工
+			findEmployee(1);//显示所有员工
+			modEmployee();
 			break;
 		case 4:
-			findEmployee();
+			//查询员工
+			findEmployee(0);
 			break;
 		case 5:
 		    printf("排序成功\n");
 			break;
 		case 6:
+			//保存员工
 			writeEmployee();
 			printf("保存成功\n");
 			break;
@@ -115,7 +122,7 @@ void addEmployee()
 	}
 	printf("员工数量：%d\n", employeeCount);
 }
-//传入一个姓名，然后循环判断，重复就返回员工的下表，不重复就返回-1
+//传入一个姓名，然后循环判断，重复就返回员工的序号，不重复就返回-1
 int getOneEmployeeName(char* name)
 {
 	int res = -1;
@@ -130,30 +137,67 @@ int getOneEmployeeName(char* name)
 	}		
 	return res;
 	}
+//修改员工信息
+void modEmployee()
+{
+	printf("请输入要修改的员工序号：");
+	int indexOfMod = -1;
+	scanf("%d", &indexOfMod);
+	if (indexOfMod >= 0 && indexOfMod < employeeCount)
+    {
+		printf("请输入新员工的姓名：");
+		char newName[20];
+		scanf("%s", newName);
+		while (strcmp(employeeList[indexOfMod].name, newName) != 0 &&
+			getOneEmployeeName(newName) > -1)//判断新姓名是否与旧和其他姓名重复
+		{
+			printf("当前员工姓名与其他员工重复!请重新输入：\n");
+			scanf("%s", newName);
+		}
+		//姓名不重复，修改姓名
+		strcpy(employeeList[indexOfMod].name, newName);
+		//修改其他信息
+		printf("\n请输入员工的性别：");
+		scanf("%s", employeeList[indexOfMod].gender);
+		printf("\n请输入员工的电话：");
+		scanf("%s", employeeList[indexOfMod].tele);
+		printf("\n请输入员工的年龄：");
+		scanf("%d", &employeeList[indexOfMod].age);
+		printf("\n请输入员工的工资：");
+		scanf("%lf", &employeeList[indexOfMod].money);
+		printf("修改成功！\n");
+	}else
+	{
+		printf("请输入正确的序号！\n");
+	}
+}
 //员工查询
-void findEmployee()
+void findEmployee(int all)
 {
 	//选择查询条件
 	int select = 0;
 	char conCharArr[40];//姓名和性别
 	double conNum1, conNum2;//工资范围
-	printf("0:全部\n");
-	printf("1:按 姓名 查询\n");
-	printf("2:按 性别 查询\n");
-	printf("3:按 工资 查询\n");
-	printf("请输入选择：\n");
-	scanf("%d", &select);
-	//录入筛选条件
-	if (select == 1 || select == 2)
+	if (all == 0)//all==0表示需要选择查询条件
 	{
-		printf("请输入筛选条件：");
-		scanf("%s", conCharArr);
-	}
-	else if (select == 3)
-	{
-		printf("请输入筛选范围m,n，用空格隔开（m <= 工资 <= n）");
-		scanf("%lf", &conNum1);
-		scanf("%lf", &conNum2);
+		printf("0:全部\n");
+		printf("1:按 姓名 查询\n");
+		printf("2:按 性别 查询\n");
+		printf("3:按 工资 查询\n");
+		printf("请输入选择：\n");
+		scanf("%d", &select);
+		//录入筛选条件
+		if (select == 1 || select == 2)
+		{
+			printf("请输入筛选条件：");
+			scanf("%s", conCharArr);
+		}
+		else if (select == 3)
+		{
+			printf("请输入筛选范围m,n，用空格隔开（m <= 工资 <= n）");
+			scanf("%lf", &conNum1);
+			scanf("%lf", &conNum2);
+		}
 	}
 	//打印表头
 	printf("\n%-5s%-15s%-10s%-16s%-16s%-10s\n\n", "序号", "姓名", "性别", "电话", "工资", "年龄");
