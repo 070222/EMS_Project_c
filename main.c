@@ -19,6 +19,10 @@ int employeeCount = 0;
 void menu();
 //添加员工
 void addEmployee();
+//删除员工
+void delEmployee();
+//根据下标删除员工
+int delEmployeeByIndex(int indexOfDel);
 //修改员工
 void modEmployee();
 //判断员工姓名是否重复
@@ -48,11 +52,13 @@ int main()
 			addEmployee();
 			break;
 		case 2:
-			printf("删除成功\n");
+			//删除员工
+			findEmployee(1);//all=1表示直接显示所有员工
+			delEmployee();
 			break;
 		case 3:
 			//修改员工
-			findEmployee(1);//all=1表示直接显示所有员工
+			findEmployee(1);
 			modEmployee();
 			break;
 		case 4:
@@ -120,7 +126,7 @@ void addEmployee()
 		 (void)ch;//防止getchar()警告
 		scanf("%c", &selectYNFlag);
 	}
-	printf("员工数量：%d\n", employeeCount);
+	printf("\n录入成功！员工数量：%d\n", employeeCount);
 }
 //传入一个姓名，然后循环判断，重复就返回员工的下表，不重复就返回-1
 int getOneEmployeeName(char* name)
@@ -137,6 +143,38 @@ int getOneEmployeeName(char* name)
 	}		
 	return res;
 	}
+//删除员工
+void delEmployee()
+{
+	printf("请输入需要删除的员工序号：");
+	int indexOfDel;
+	scanf("%d", &indexOfDel);
+	int res = delEmployeeByIndex(indexOfDel);//调用删除函数(子函数)
+	if (res)//1表示删除成功
+	{
+		printf("删除成功！\n");
+	}
+	else
+	{
+		printf("删除失败！\n");
+	}
+}
+//根据下标删除员工
+int delEmployeeByIndex(int indexOfDel)
+{
+	if (indexOfDel < 0 || indexOfDel >= employeeCount)
+	{
+		return 0;//删除失败
+	}
+	//开始删除
+	for (int i = indexOfDel; i < employeeCount - 1; i++)
+	{
+		employeeList[i] = employeeList[i + 1];
+	}
+	employeeCount--;
+	return 1;//删除成功
+	
+}
 //修改员工
 void modEmployee()
 {
